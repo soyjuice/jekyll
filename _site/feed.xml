@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>SoyJuice的小站</title>
+    <description>关于OI，关于高考，关于一切新手看待世界的视角。</description>
+    <link>http://localhost:4000/</link>
+    <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml" />
+    <pubDate>Tue, 08 Nov 2016 14:28:50 +0800</pubDate>
+    <lastBuildDate>Tue, 08 Nov 2016 14:28:50 +0800</lastBuildDate>
+    <generator>Jekyll v3.3.0</generator>
+    
+      <item>
+        <title>UVa 11997 K Smallest Sums</title>
+        <description>&lt;h2 id=&quot;description&quot;&gt;Description&lt;/h2&gt;
+
+&lt;p&gt;You’re given k arrays, each array has k integers. There are k&lt;sup&gt;k&lt;/sup&gt;  ways to pick exactly one element in each array and calculate the sum of the integers. Your task is to find the k smallest sums among them.&lt;/p&gt;
+
+&lt;p&gt;你被赋予了k个数组，每个数组都有k个整数。有k&lt;sup&gt;k&lt;/sup&gt;的方式去在每个数组中挑选一个数，然后计算这些整数之和。你的任务是找到他们之间的最小的和。
+&lt;!--more--&gt;&lt;/p&gt;
+&lt;h2 id=&quot;input&quot;&gt;Input&lt;/h2&gt;
+
+&lt;p&gt;There will be several test cases. The first line of each case contains an integer k (2 ≤ k ≤ 750). Each of the following k lines contains k positive integers in each array. Each of these integers does not exceed 1,000,000. The input is terminated by end-of-file (EOF).&lt;/p&gt;
+
+&lt;p&gt;将有几个测试数据。每个数据的第一行包含一个整数k（2≤k≤750）。每个下面的K行中包含每个数组中的k个正整数。这些整数中的每一个不超过1000000。输入EOF结束（EOF）。&lt;/p&gt;
+
+&lt;h2 id=&quot;output&quot;&gt;Output&lt;/h2&gt;
+
+&lt;p&gt;For each test case, print the k smallest sums, in ascending order.&lt;/p&gt;
+
+&lt;p&gt;对于每一个测试数据，输出最小的和，以递增的顺序。&lt;/p&gt;
+
+&lt;h2 id=&quot;data&quot;&gt;Data&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;标准输入&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;3
+1 8 5
+9 2 5
+10 7 6
+2
+1 1
+1 2&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;标准输出&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;9 10 12
+2 2&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;注：以上翻译取自机翻，加上我的修改，应该勉强能看。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;analysis&quot;&gt;Analysis&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;题目分析：&lt;/strong&gt;非常简单明了的题意，如果是最优解，可以直接从每个序列选取最大值，但是由于是前优K解，所以没法这么直接。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;算法分析：&lt;/strong&gt;对于前优K解，根据刘汝佳大神的方法，可以用多路归并解决。&lt;/p&gt;
+
+&lt;p&gt;解决这个问题之前，可以先考虑它的简化版：给出两个长度为n的&lt;strong&gt;有序&lt;/strong&gt;表A,B各取一个数，可以有n&lt;sup&gt;2&lt;/sup&gt;个和，求最小的前n个和。&lt;/p&gt;
+
+&lt;p&gt;我们可以将这n&lt;sup&gt;2&lt;/sup&gt;个和分成n个有序表&lt;/p&gt;
+
+&lt;p&gt;表1：A&lt;sub&gt;1&lt;/sub&gt;+B&lt;sub&gt;1 &lt;/sub&gt;&amp;lt;= A&lt;sub&gt;1&lt;/sub&gt;+B&lt;sub&gt;2 &lt;/sub&gt;&amp;lt;= A&lt;sub&gt;1&lt;/sub&gt;+B&lt;sub&gt;3 &lt;/sub&gt;&amp;lt;= …
+表2：A&lt;sub&gt;2&lt;/sub&gt;+B&lt;sub&gt;1 &lt;/sub&gt;&amp;lt;= A&lt;sub&gt;2&lt;/sub&gt;+B&lt;sub&gt;2 &lt;/sub&gt;&amp;lt;= A&lt;sub&gt;2&lt;/sub&gt;+B&lt;sub&gt;3 &lt;/sub&gt;&amp;lt;= …
+表3：A&lt;sub&gt;3&lt;/sub&gt;+B&lt;sub&gt;1 &lt;/sub&gt;&amp;lt;= A&lt;sub&gt;3&lt;/sub&gt;+B&lt;sub&gt;2 &lt;/sub&gt;&amp;lt;= A&lt;sub&gt;3&lt;/sub&gt;+B&lt;sub&gt;3 &lt;/sub&gt;&amp;lt;= …&lt;/p&gt;
+
+&lt;p&gt;可以看出当A,B递增时，上表也是递增。&lt;/p&gt;
+
+&lt;p&gt;可以用二元组(s,b)表示一个元素，其中s=A&lt;sub&gt;a&lt;/sub&gt;+A&lt;sub&gt;b&lt;/sub&gt;。当需要某个表中的下一个元素(s’,b+1)时，只需要&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;s’&lt;/strong&gt;=A&lt;sub&gt;a&lt;/sub&gt;+B&lt;sub&gt;b+1&lt;/sub&gt;=A&lt;sub&gt;a&lt;/sub&gt;+B&lt;sub&gt;b&lt;/sub&gt;-B&lt;sub&gt;b&lt;/sub&gt;+B&lt;sub&gt;b+1&lt;/sub&gt;=&lt;strong&gt;s-B&lt;sub&gt;b&lt;/sub&gt;+B&lt;sub&gt;b+1&lt;/sub&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;因此，定义下面这个结构体来表示上述二元组。&lt;/p&gt;
+
+&lt;pre style=&quot;color:#000000;background:#ffffff;&quot;&gt;&lt;span style=&quot;color:#800000; font-weight:bold; &quot;&gt;struct&lt;/span&gt; Item
+&lt;span style=&quot;color:#800080; &quot;&gt;{&lt;/span&gt;
+    &lt;span style=&quot;color:#800000; font-weight:bold; &quot;&gt;int&lt;/span&gt; s&lt;span style=&quot;color:#808030; &quot;&gt;,&lt;/span&gt;b&lt;span style=&quot;color:#800080; &quot;&gt;;&lt;/span&gt;
+    Item&lt;span style=&quot;color:#808030; &quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#800000; font-weight:bold; &quot;&gt;int&lt;/span&gt; s&lt;span style=&quot;color:#808030; &quot;&gt;,&lt;/span&gt;&lt;span style=&quot;color:#800000; font-weight:bold; &quot;&gt;int&lt;/span&gt; b&lt;span style=&quot;color:#808030; &quot;&gt;)&lt;/span&gt;&lt;span style=&quot;color:#800080; &quot;&gt;:&lt;/span&gt;s&lt;span style=&quot;color:#808030; &quot;&gt;(&lt;/span&gt;s&lt;span style=&quot;color:#808030; &quot;&gt;)&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;,&lt;/span&gt;b&lt;span style=&quot;color:#808030; &quot;&gt;(&lt;/span&gt;b&lt;span style=&quot;color:#808030; &quot;&gt;)&lt;/span&gt;&lt;span style=&quot;color:#800080; &quot;&gt;{&lt;/span&gt;&lt;span style=&quot;color:#800080; &quot;&gt;}&lt;/span&gt;
+    &lt;span style=&quot;color:#800000; font-weight:bold; &quot;&gt;bool&lt;/span&gt; &lt;span style=&quot;color:#800000; font-weight:bold; &quot;&gt;operator&lt;/span&gt; &lt;span style=&quot;color:#808030; &quot;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&quot;color:#808030; &quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#800000; font-weight:bold; &quot;&gt;const&lt;/span&gt; Item&lt;span style=&quot;color:#808030; &quot;&gt;&amp;amp;&lt;/span&gt; rhs&lt;span style=&quot;color:#808030; &quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#800000; font-weight:bold; &quot;&gt;const&lt;/span&gt;  
+    &lt;span style=&quot;color:#800080; &quot;&gt;{&lt;/span&gt;       
+        &lt;span style=&quot;color:#800000; font-weight:bold; &quot;&gt;return&lt;/span&gt; s &lt;span style=&quot;color:#808030; &quot;&gt;&amp;gt;&lt;/span&gt; rhs&lt;span style=&quot;color:#808030; &quot;&gt;.&lt;/span&gt;s&lt;span style=&quot;color:#800080; &quot;&gt;;&lt;/span&gt;
+    &lt;span style=&quot;color:#800080; &quot;&gt;}&lt;/span&gt;
+&lt;span style=&quot;color:#800080; &quot;&gt;}&lt;/span&gt;&lt;span style=&quot;color:#800080; &quot;&gt;;&lt;/span&gt;
+&lt;/pre&gt;
+
+&lt;p&gt;每次读入一组数据时，将表合并，取n次最小值；因为在取出表1的元素之前，表2对应位置的数一定要大，一定不是当前的最小值，所以当取出这个元素后，再将它同列的下一个元素入队。&lt;/p&gt;
+
+&lt;pre style=&quot;color:#000000;background:#ffffff;&quot;&gt;&lt;span style=&quot;color:#800000; font-weight:bold; &quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#603000; &quot;&gt;merge&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#800000; font-weight:bold; &quot;&gt;int&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;*&lt;/span&gt; A&lt;span style=&quot;color:#808030; &quot;&gt;,&lt;/span&gt;&lt;span style=&quot;color:#800000; font-weight:bold; &quot;&gt;int&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;*&lt;/span&gt; B&lt;span style=&quot;color:#808030; &quot;&gt;,&lt;/span&gt;&lt;span style=&quot;color:#800000; font-weight:bold; &quot;&gt;int&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;*&lt;/span&gt; C&lt;span style=&quot;color:#808030; &quot;&gt;,&lt;/span&gt;&lt;span style=&quot;color:#800000; font-weight:bold; &quot;&gt;int&lt;/span&gt; n&lt;span style=&quot;color:#808030; &quot;&gt;)&lt;/span&gt;
+&lt;span style=&quot;color:#800080; &quot;&gt;{&lt;/span&gt;
+    &lt;span style=&quot;color:#603000; &quot;&gt;priority_queue&lt;/span&gt; q&lt;span style=&quot;color:#800080; &quot;&gt;;&lt;/span&gt;
+    &lt;span style=&quot;color:#800000; font-weight:bold; &quot;&gt;for&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#800000; font-weight:bold; &quot;&gt;int&lt;/span&gt; i&lt;span style=&quot;color:#808030; &quot;&gt;=&lt;/span&gt;&lt;span style=&quot;color:#008c00; &quot;&gt;0&lt;/span&gt;&lt;span style=&quot;color:#800080; &quot;&gt;;&lt;/span&gt;i&lt;span style=&quot;color:#808030; &quot;&gt;&amp;lt;&lt;/span&gt;n&lt;span style=&quot;color:#800080; &quot;&gt;;&lt;/span&gt;i&lt;span style=&quot;color:#808030; &quot;&gt;+&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;+&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;)&lt;/span&gt; q&lt;span style=&quot;color:#808030; &quot;&gt;.&lt;/span&gt;push&lt;span style=&quot;color:#808030; &quot;&gt;(&lt;/span&gt;Item&lt;span style=&quot;color:#808030; &quot;&gt;(&lt;/span&gt;A&lt;span style=&quot;color:#808030; &quot;&gt;[&lt;/span&gt;i&lt;span style=&quot;color:#808030; &quot;&gt;]&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;+&lt;/span&gt;B&lt;span style=&quot;color:#808030; &quot;&gt;[&lt;/span&gt;&lt;span style=&quot;color:#008c00; &quot;&gt;0&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;]&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;,&lt;/span&gt;&lt;span style=&quot;color:#008c00; &quot;&gt;0&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;)&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;)&lt;/span&gt;&lt;span style=&quot;color:#800080; &quot;&gt;;&lt;/span&gt;
+    &lt;span style=&quot;color:#800000; font-weight:bold; &quot;&gt;for&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#800000; font-weight:bold; &quot;&gt;int&lt;/span&gt; i&lt;span style=&quot;color:#808030; &quot;&gt;=&lt;/span&gt;&lt;span style=&quot;color:#008c00; &quot;&gt;0&lt;/span&gt;&lt;span style=&quot;color:#800080; &quot;&gt;;&lt;/span&gt;i&lt;span style=&quot;color:#808030; &quot;&gt;&amp;lt;&lt;/span&gt;n&lt;span style=&quot;color:#800080; &quot;&gt;;&lt;/span&gt;i&lt;span style=&quot;color:#808030; &quot;&gt;+&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;+&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;)&lt;/span&gt;
+    &lt;span style=&quot;color:#800080; &quot;&gt;{&lt;/span&gt;
+        Item item&lt;span style=&quot;color:#808030; &quot;&gt;=&lt;/span&gt;q&lt;span style=&quot;color:#808030; &quot;&gt;.&lt;/span&gt;top&lt;span style=&quot;color:#808030; &quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;)&lt;/span&gt;&lt;span style=&quot;color:#800080; &quot;&gt;;&lt;/span&gt;q&lt;span style=&quot;color:#808030; &quot;&gt;.&lt;/span&gt;pop&lt;span style=&quot;color:#808030; &quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;)&lt;/span&gt;&lt;span style=&quot;color:#800080; &quot;&gt;;&lt;/span&gt;
+        C&lt;span style=&quot;color:#808030; &quot;&gt;[&lt;/span&gt;i&lt;span style=&quot;color:#808030; &quot;&gt;]&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;=&lt;/span&gt;item&lt;span style=&quot;color:#808030; &quot;&gt;.&lt;/span&gt;s&lt;span style=&quot;color:#800080; &quot;&gt;;&lt;/span&gt;
+        &lt;span style=&quot;color:#800000; font-weight:bold; &quot;&gt;int&lt;/span&gt; b&lt;span style=&quot;color:#808030; &quot;&gt;=&lt;/span&gt;item&lt;span style=&quot;color:#808030; &quot;&gt;.&lt;/span&gt;b&lt;span style=&quot;color:#800080; &quot;&gt;;&lt;/span&gt;
+        &lt;span style=&quot;color:#800000; font-weight:bold; &quot;&gt;if&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;(&lt;/span&gt;b&lt;span style=&quot;color:#808030; &quot;&gt;+&lt;/span&gt;&lt;span style=&quot;color:#008c00; &quot;&gt;1&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;&amp;lt;&lt;/span&gt;n&lt;span style=&quot;color:#808030; &quot;&gt;)&lt;/span&gt; q&lt;span style=&quot;color:#808030; &quot;&gt;.&lt;/span&gt;push&lt;span style=&quot;color:#808030; &quot;&gt;(&lt;/span&gt;Item&lt;span style=&quot;color:#808030; &quot;&gt;(&lt;/span&gt;item&lt;span style=&quot;color:#808030; &quot;&gt;.&lt;/span&gt;s&lt;span style=&quot;color:#808030; &quot;&gt;-&lt;/span&gt;B&lt;span style=&quot;color:#808030; &quot;&gt;[&lt;/span&gt;b&lt;span style=&quot;color:#808030; &quot;&gt;]&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;+&lt;/span&gt;B&lt;span style=&quot;color:#808030; &quot;&gt;[&lt;/span&gt;b&lt;span style=&quot;color:#808030; &quot;&gt;+&lt;/span&gt;&lt;span style=&quot;color:#008c00; &quot;&gt;1&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;]&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;,&lt;/span&gt;b&lt;span style=&quot;color:#808030; &quot;&gt;+&lt;/span&gt;&lt;span style=&quot;color:#008c00; &quot;&gt;1&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;)&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;)&lt;/span&gt;&lt;span style=&quot;color:#800080; &quot;&gt;;&lt;/span&gt;
+    &lt;span style=&quot;color:#800080; &quot;&gt;}&lt;/span&gt;
+&lt;span style=&quot;color:#800080; &quot;&gt;}&lt;/span&gt;
+&lt;/pre&gt;
+
+&lt;p&gt;这样，两个表的问题就解决了。如果是多个表的话，两两合并就可以。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;数据分析：&lt;/strong&gt;k&amp;lt;=750，并不算特别大，优先队列完全可以承受。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;代码分析：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre style=&quot;color:#000000;background:#ffffff;&quot;&gt;&lt;span style=&quot;color:#004a43; &quot;&gt;#&lt;/span&gt;&lt;span style=&quot;color:#004a43; &quot;&gt;include&lt;/span&gt;&lt;span style=&quot;color:#800000; &quot;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&quot;color:#40015a; &quot;&gt;bits/stdc++.h&lt;/span&gt;&lt;span style=&quot;color:#800000; &quot;&gt;&amp;gt;&lt;/span&gt;
+&lt;span style=&quot;color:#800000; font-weight:bold; &quot;&gt;using&lt;/span&gt; &lt;span style=&quot;color:#800000; font-weight:bold; &quot;&gt;namespace&lt;/span&gt; &lt;span style=&quot;color:#666616; &quot;&gt;std&lt;/span&gt;&lt;span style=&quot;color:#800080; &quot;&gt;;&lt;/span&gt;
+
+&lt;span style=&quot;color:#800000; font-weight:bold; &quot;&gt;const&lt;/span&gt; &lt;span style=&quot;color:#800000; font-weight:bold; &quot;&gt;int&lt;/span&gt; maxn&lt;span style=&quot;color:#808030; &quot;&gt;=&lt;/span&gt;&lt;span style=&quot;color:#008c00; &quot;&gt;768&lt;/span&gt;&lt;span style=&quot;color:#800080; &quot;&gt;;&lt;/span&gt;
+&lt;span style=&quot;color:#800000; font-weight:bold; &quot;&gt;int&lt;/span&gt; A&lt;span style=&quot;color:#808030; &quot;&gt;[&lt;/span&gt;maxn&lt;span style=&quot;color:#808030; &quot;&gt;]&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;[&lt;/span&gt;maxn&lt;span style=&quot;color:#808030; &quot;&gt;]&lt;/span&gt;&lt;span style=&quot;color:#800080; &quot;&gt;;&lt;/span&gt;
+
+&lt;span style=&quot;color:#800000; font-weight:bold; &quot;&gt;struct&lt;/span&gt; Item
+&lt;span style=&quot;color:#800080; &quot;&gt;{&lt;/span&gt;
+    &lt;span style=&quot;color:#800000; font-weight:bold; &quot;&gt;int&lt;/span&gt; s&lt;span style=&quot;color:#808030; &quot;&gt;,&lt;/span&gt;b&lt;span style=&quot;color:#800080; &quot;&gt;;&lt;/span&gt;
+    Item&lt;span style=&quot;color:#808030; &quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#800000; font-weight:bold; &quot;&gt;int&lt;/span&gt; s&lt;span style=&quot;color:#808030; &quot;&gt;,&lt;/span&gt;&lt;span style=&quot;color:#800000; font-weight:bold; &quot;&gt;int&lt;/span&gt; b&lt;span style=&quot;color:#808030; &quot;&gt;)&lt;/span&gt;&lt;span style=&quot;color:#800080; &quot;&gt;:&lt;/span&gt;s&lt;span style=&quot;color:#808030; &quot;&gt;(&lt;/span&gt;s&lt;span style=&quot;color:#808030; &quot;&gt;)&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;,&lt;/span&gt;b&lt;span style=&quot;color:#808030; &quot;&gt;(&lt;/span&gt;b&lt;span style=&quot;color:#808030; &quot;&gt;)&lt;/span&gt;&lt;span style=&quot;color:#800080; &quot;&gt;{&lt;/span&gt;&lt;span style=&quot;color:#800080; &quot;&gt;}&lt;/span&gt;
+    &lt;span style=&quot;color:#800000; font-weight:bold; &quot;&gt;bool&lt;/span&gt; &lt;span style=&quot;color:#800000; font-weight:bold; &quot;&gt;operator&lt;/span&gt; &lt;span style=&quot;color:#808030; &quot;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&quot;color:#808030; &quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#800000; font-weight:bold; &quot;&gt;const&lt;/span&gt; Item&lt;span style=&quot;color:#808030; &quot;&gt;&amp;amp;&lt;/span&gt; rhs&lt;span style=&quot;color:#808030; &quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#800000; font-weight:bold; &quot;&gt;const&lt;/span&gt;     
+    &lt;span style=&quot;color:#800080; &quot;&gt;{&lt;/span&gt;         
+        &lt;span style=&quot;color:#800000; font-weight:bold; &quot;&gt;return&lt;/span&gt; s &lt;span style=&quot;color:#808030; &quot;&gt;&amp;gt;&lt;/span&gt; rhs&lt;span style=&quot;color:#808030; &quot;&gt;.&lt;/span&gt;s&lt;span style=&quot;color:#800080; &quot;&gt;;&lt;/span&gt;
+    &lt;span style=&quot;color:#800080; &quot;&gt;}&lt;/span&gt;
+&lt;span style=&quot;color:#800080; &quot;&gt;}&lt;/span&gt;&lt;span style=&quot;color:#800080; &quot;&gt;;&lt;/span&gt;
+
+&lt;span style=&quot;color:#800000; font-weight:bold; &quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#603000; &quot;&gt;merge&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#800000; font-weight:bold; &quot;&gt;int&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;*&lt;/span&gt; A&lt;span style=&quot;color:#808030; &quot;&gt;,&lt;/span&gt;&lt;span style=&quot;color:#800000; font-weight:bold; &quot;&gt;int&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;*&lt;/span&gt; B&lt;span style=&quot;color:#808030; &quot;&gt;,&lt;/span&gt;&lt;span style=&quot;color:#800000; font-weight:bold; &quot;&gt;int&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;*&lt;/span&gt; C&lt;span style=&quot;color:#808030; &quot;&gt;,&lt;/span&gt;&lt;span style=&quot;color:#800000; font-weight:bold; &quot;&gt;int&lt;/span&gt; n&lt;span style=&quot;color:#808030; &quot;&gt;)&lt;/span&gt;
+&lt;span style=&quot;color:#800080; &quot;&gt;{&lt;/span&gt;
+    &lt;span style=&quot;color:#603000; &quot;&gt;priority_queue&lt;/span&gt; q&lt;span style=&quot;color:#800080; &quot;&gt;;&lt;/span&gt;
+    &lt;span style=&quot;color:#800000; font-weight:bold; &quot;&gt;for&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#800000; font-weight:bold; &quot;&gt;int&lt;/span&gt; i&lt;span style=&quot;color:#808030; &quot;&gt;=&lt;/span&gt;&lt;span style=&quot;color:#008c00; &quot;&gt;0&lt;/span&gt;&lt;span style=&quot;color:#800080; &quot;&gt;;&lt;/span&gt;i&lt;span style=&quot;color:#808030; &quot;&gt;&amp;lt;&lt;/span&gt;n&lt;span style=&quot;color:#800080; &quot;&gt;;&lt;/span&gt;i&lt;span style=&quot;color:#808030; &quot;&gt;+&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;+&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;)&lt;/span&gt; q&lt;span style=&quot;color:#808030; &quot;&gt;.&lt;/span&gt;push&lt;span style=&quot;color:#808030; &quot;&gt;(&lt;/span&gt;Item&lt;span style=&quot;color:#808030; &quot;&gt;(&lt;/span&gt;A&lt;span style=&quot;color:#808030; &quot;&gt;[&lt;/span&gt;i&lt;span style=&quot;color:#808030; &quot;&gt;]&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;+&lt;/span&gt;B&lt;span style=&quot;color:#808030; &quot;&gt;[&lt;/span&gt;&lt;span style=&quot;color:#008c00; &quot;&gt;0&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;]&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;,&lt;/span&gt;&lt;span style=&quot;color:#008c00; &quot;&gt;0&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;)&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;)&lt;/span&gt;&lt;span style=&quot;color:#800080; &quot;&gt;;&lt;/span&gt;
+    &lt;span style=&quot;color:#800000; font-weight:bold; &quot;&gt;for&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#800000; font-weight:bold; &quot;&gt;int&lt;/span&gt; i&lt;span style=&quot;color:#808030; &quot;&gt;=&lt;/span&gt;&lt;span style=&quot;color:#008c00; &quot;&gt;0&lt;/span&gt;&lt;span style=&quot;color:#800080; &quot;&gt;;&lt;/span&gt;i&lt;span style=&quot;color:#808030; &quot;&gt;&amp;lt;&lt;/span&gt;n&lt;span style=&quot;color:#800080; &quot;&gt;;&lt;/span&gt;i&lt;span style=&quot;color:#808030; &quot;&gt;+&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;+&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;)&lt;/span&gt;
+    &lt;span style=&quot;color:#800080; &quot;&gt;{&lt;/span&gt;
+        Item item&lt;span style=&quot;color:#808030; &quot;&gt;=&lt;/span&gt;q&lt;span style=&quot;color:#808030; &quot;&gt;.&lt;/span&gt;top&lt;span style=&quot;color:#808030; &quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;)&lt;/span&gt;&lt;span style=&quot;color:#800080; &quot;&gt;;&lt;/span&gt;q&lt;span style=&quot;color:#808030; &quot;&gt;.&lt;/span&gt;pop&lt;span style=&quot;color:#808030; &quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;)&lt;/span&gt;&lt;span style=&quot;color:#800080; &quot;&gt;;&lt;/span&gt;
+        C&lt;span style=&quot;color:#808030; &quot;&gt;[&lt;/span&gt;i&lt;span style=&quot;color:#808030; &quot;&gt;]&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;=&lt;/span&gt;item&lt;span style=&quot;color:#808030; &quot;&gt;.&lt;/span&gt;s&lt;span style=&quot;color:#800080; &quot;&gt;;&lt;/span&gt;
+        &lt;span style=&quot;color:#800000; font-weight:bold; &quot;&gt;int&lt;/span&gt; b&lt;span style=&quot;color:#808030; &quot;&gt;=&lt;/span&gt;item&lt;span style=&quot;color:#808030; &quot;&gt;.&lt;/span&gt;b&lt;span style=&quot;color:#800080; &quot;&gt;;&lt;/span&gt;
+        &lt;span style=&quot;color:#800000; font-weight:bold; &quot;&gt;if&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;(&lt;/span&gt;b&lt;span style=&quot;color:#808030; &quot;&gt;+&lt;/span&gt;&lt;span style=&quot;color:#008c00; &quot;&gt;1&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;&amp;lt;&lt;/span&gt;n&lt;span style=&quot;color:#808030; &quot;&gt;)&lt;/span&gt; q&lt;span style=&quot;color:#808030; &quot;&gt;.&lt;/span&gt;push&lt;span style=&quot;color:#808030; &quot;&gt;(&lt;/span&gt;Item&lt;span style=&quot;color:#808030; &quot;&gt;(&lt;/span&gt;item&lt;span style=&quot;color:#808030; &quot;&gt;.&lt;/span&gt;s&lt;span style=&quot;color:#808030; &quot;&gt;-&lt;/span&gt;B&lt;span style=&quot;color:#808030; &quot;&gt;[&lt;/span&gt;b&lt;span style=&quot;color:#808030; &quot;&gt;]&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;+&lt;/span&gt;B&lt;span style=&quot;color:#808030; &quot;&gt;[&lt;/span&gt;b&lt;span style=&quot;color:#808030; &quot;&gt;+&lt;/span&gt;&lt;span style=&quot;color:#008c00; &quot;&gt;1&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;]&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;,&lt;/span&gt;b&lt;span style=&quot;color:#808030; &quot;&gt;+&lt;/span&gt;&lt;span style=&quot;color:#008c00; &quot;&gt;1&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;)&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;)&lt;/span&gt;&lt;span style=&quot;color:#800080; &quot;&gt;;&lt;/span&gt;
+    &lt;span style=&quot;color:#800080; &quot;&gt;}&lt;/span&gt;
+&lt;span style=&quot;color:#800080; &quot;&gt;}&lt;/span&gt;
+
+&lt;span style=&quot;color:#800000; font-weight:bold; &quot;&gt;int&lt;/span&gt; &lt;span style=&quot;color:#400000; &quot;&gt;main&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;)&lt;/span&gt;
+&lt;span style=&quot;color:#800080; &quot;&gt;{&lt;/span&gt;
+    &lt;span style=&quot;color:#800000; font-weight:bold; &quot;&gt;int&lt;/span&gt; n&lt;span style=&quot;color:#800080; &quot;&gt;;&lt;/span&gt;
+    &lt;span style=&quot;color:#800000; font-weight:bold; &quot;&gt;while&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#603000; &quot;&gt;scanf&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#800000; &quot;&gt;&quot;&lt;/span&gt;&lt;span style=&quot;color:#007997; &quot;&gt;%d&lt;/span&gt;&lt;span style=&quot;color:#800000; &quot;&gt;&quot;&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;,&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;&amp;amp;&lt;/span&gt;n&lt;span style=&quot;color:#808030; &quot;&gt;)&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;=&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;=&lt;/span&gt;&lt;span style=&quot;color:#008c00; &quot;&gt;1&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;)&lt;/span&gt;
+    &lt;span style=&quot;color:#800080; &quot;&gt;{&lt;/span&gt;
+        &lt;span style=&quot;color:#800000; font-weight:bold; &quot;&gt;for&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#800000; font-weight:bold; &quot;&gt;int&lt;/span&gt; i&lt;span style=&quot;color:#808030; &quot;&gt;=&lt;/span&gt;&lt;span style=&quot;color:#008c00; &quot;&gt;0&lt;/span&gt;&lt;span style=&quot;color:#800080; &quot;&gt;;&lt;/span&gt;i&lt;span style=&quot;color:#808030; &quot;&gt;&amp;lt;&lt;/span&gt;n&lt;span style=&quot;color:#800080; &quot;&gt;;&lt;/span&gt;i&lt;span style=&quot;color:#808030; &quot;&gt;+&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;+&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;)&lt;/span&gt; 
+        &lt;span style=&quot;color:#800080; &quot;&gt;{&lt;/span&gt;
+            &lt;span style=&quot;color:#800000; font-weight:bold; &quot;&gt;for&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#800000; font-weight:bold; &quot;&gt;int&lt;/span&gt; j&lt;span style=&quot;color:#808030; &quot;&gt;=&lt;/span&gt;&lt;span style=&quot;color:#008c00; &quot;&gt;0&lt;/span&gt;&lt;span style=&quot;color:#800080; &quot;&gt;;&lt;/span&gt;j&lt;span style=&quot;color:#808030; &quot;&gt;&amp;lt;&lt;/span&gt;n&lt;span style=&quot;color:#800080; &quot;&gt;;&lt;/span&gt;j&lt;span style=&quot;color:#808030; &quot;&gt;+&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;+&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#603000; &quot;&gt;scanf&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#800000; &quot;&gt;&quot;&lt;/span&gt;&lt;span style=&quot;color:#007997; &quot;&gt;%d&lt;/span&gt;&lt;span style=&quot;color:#800000; &quot;&gt;&quot;&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;,&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;&amp;amp;&lt;/span&gt;A&lt;span style=&quot;color:#808030; &quot;&gt;[&lt;/span&gt;i&lt;span style=&quot;color:#808030; &quot;&gt;]&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;[&lt;/span&gt;j&lt;span style=&quot;color:#808030; &quot;&gt;]&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;)&lt;/span&gt;&lt;span style=&quot;color:#800080; &quot;&gt;;&lt;/span&gt;
+            &lt;span style=&quot;color:#603000; &quot;&gt;sort&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;(&lt;/span&gt;A&lt;span style=&quot;color:#808030; &quot;&gt;[&lt;/span&gt;i&lt;span style=&quot;color:#808030; &quot;&gt;]&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;,&lt;/span&gt;A&lt;span style=&quot;color:#808030; &quot;&gt;[&lt;/span&gt;i&lt;span style=&quot;color:#808030; &quot;&gt;]&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;+&lt;/span&gt;n&lt;span style=&quot;color:#808030; &quot;&gt;)&lt;/span&gt;&lt;span style=&quot;color:#800080; &quot;&gt;;&lt;/span&gt;
+        &lt;span style=&quot;color:#800080; &quot;&gt;}&lt;/span&gt;
+        &lt;span style=&quot;color:#800000; font-weight:bold; &quot;&gt;for&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#800000; font-weight:bold; &quot;&gt;int&lt;/span&gt; i&lt;span style=&quot;color:#808030; &quot;&gt;=&lt;/span&gt;&lt;span style=&quot;color:#008c00; &quot;&gt;1&lt;/span&gt;&lt;span style=&quot;color:#800080; &quot;&gt;;&lt;/span&gt;i&lt;span style=&quot;color:#808030; &quot;&gt;&amp;lt;&lt;/span&gt;n&lt;span style=&quot;color:#800080; &quot;&gt;;&lt;/span&gt;i&lt;span style=&quot;color:#808030; &quot;&gt;+&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;+&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#603000; &quot;&gt;merge&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;(&lt;/span&gt;A&lt;span style=&quot;color:#808030; &quot;&gt;[&lt;/span&gt;&lt;span style=&quot;color:#008c00; &quot;&gt;0&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;]&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;,&lt;/span&gt;A&lt;span style=&quot;color:#808030; &quot;&gt;[&lt;/span&gt;i&lt;span style=&quot;color:#808030; &quot;&gt;]&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;,&lt;/span&gt;A&lt;span style=&quot;color:#808030; &quot;&gt;[&lt;/span&gt;&lt;span style=&quot;color:#008c00; &quot;&gt;0&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;]&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;,&lt;/span&gt;n&lt;span style=&quot;color:#808030; &quot;&gt;)&lt;/span&gt;&lt;span style=&quot;color:#800080; &quot;&gt;;&lt;/span&gt;
+        &lt;span style=&quot;color:#800000; font-weight:bold; &quot;&gt;for&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#800000; font-weight:bold; &quot;&gt;int&lt;/span&gt; i&lt;span style=&quot;color:#808030; &quot;&gt;=&lt;/span&gt;&lt;span style=&quot;color:#008c00; &quot;&gt;0&lt;/span&gt;&lt;span style=&quot;color:#800080; &quot;&gt;;&lt;/span&gt;i&lt;span style=&quot;color:#808030; &quot;&gt;&amp;lt;&lt;/span&gt;n&lt;span style=&quot;color:#800080; &quot;&gt;;&lt;/span&gt;i&lt;span style=&quot;color:#808030; &quot;&gt;+&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;+&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#603000; &quot;&gt;printf&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#800000; &quot;&gt;&quot;&lt;/span&gt;&lt;span style=&quot;color:#007997; &quot;&gt;%d&lt;/span&gt;&lt;span style=&quot;color:#0000e6; &quot;&gt; &lt;/span&gt;&lt;span style=&quot;color:#800000; &quot;&gt;&quot;&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;,&lt;/span&gt;A&lt;span style=&quot;color:#808030; &quot;&gt;[&lt;/span&gt;&lt;span style=&quot;color:#008c00; &quot;&gt;0&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;]&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;[&lt;/span&gt;i&lt;span style=&quot;color:#808030; &quot;&gt;]&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;)&lt;/span&gt;&lt;span style=&quot;color:#800080; &quot;&gt;;&lt;/span&gt;
+        &lt;span style=&quot;color:#603000; &quot;&gt;printf&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#800000; &quot;&gt;&quot;&lt;/span&gt;&lt;span style=&quot;color:#0f69ff; &quot;&gt;\n&lt;/span&gt;&lt;span style=&quot;color:#800000; &quot;&gt;&quot;&lt;/span&gt;&lt;span style=&quot;color:#808030; &quot;&gt;)&lt;/span&gt;&lt;span style=&quot;color:#800080; &quot;&gt;;&lt;/span&gt;
+    &lt;span style=&quot;color:#800080; &quot;&gt;}&lt;/span&gt;
+    &lt;span style=&quot;color:#800000; font-weight:bold; &quot;&gt;return&lt;/span&gt; &lt;span style=&quot;color:#008c00; &quot;&gt;0&lt;/span&gt;&lt;span style=&quot;color:#800080; &quot;&gt;;&lt;/span&gt;
+&lt;span style=&quot;color:#800080; &quot;&gt;}&lt;/span&gt;
+&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;多路归并&lt;/strong&gt;可以广泛地运用于各种求&lt;strong&gt;最优k解&lt;/strong&gt;，原理是将&lt;strong&gt;多个有序表&lt;/strong&gt;合并成&lt;strong&gt;一个有序表&lt;/strong&gt;，对于答案来说，其必然是一个有序表，故此算法正确，并将所有可能性考虑到。&lt;/p&gt;
+</description>
+        <pubDate>Tue, 25 Oct 2016 03:58:01 +0800</pubDate>
+        <link>http://localhost:4000/2016/10/25/UVa-11997-k-smallest-sums/</link>
+        <guid isPermaLink="true">http://localhost:4000/2016/10/25/UVa-11997-k-smallest-sums/</guid>
+        
+        <category>暴力</category>
+        
+        <category>多路归并</category>
+        
+        
+      </item>
+    
+  </channel>
+</rss>
